@@ -45,9 +45,9 @@ def get_crypto_news():
             })
 
         if news_info:
-            fulfillment_text += f"Estas son las últimas noticias sobre {crypto_name}\n--------------------------\n"
+            fulfillment_text += f"Estas son las últimas noticias sobre tu criptomoneda\n--------------------------\n"
             for item in news_info:
-                fulfillment_text += f"Title: {item['title']}\nDate: {item['date']}\nURL: {item['url']}\n--------------------------\n"
+                fulfillment_text += f"Titular de noticia : {item['title']}\nFecha: {item['date']}\nLink: {item['url']}\n--------------------------\n"
         else:
             fulfillment_text = "No hay noticias recientes de esta cryptomoneda"
     else:
