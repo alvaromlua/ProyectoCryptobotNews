@@ -3,3 +3,7 @@ flasgger
 flask_restful
 pyairtable
 gunicorn
+torch 
+torchvision
+fastai
+transformers
