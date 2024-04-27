@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from fastai.text.all import *
 import pandas as pd
 from sklearn import preprocessing
