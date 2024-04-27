@@ -10,9 +10,11 @@ global_learn_cls = None
 def load_model():
     
     df = pd.read_excel('Datos_noticias_fin_tot.xlsx')
-    # Instanciamos nuestro codificador de "labels"
+    print("\n---------------------------- Instanciamos nuestro codificador de labels ----------------------------\n")
     encoder = preprocessing.LabelEncoder()
-    # Y lo alimentamos con la información de las categorias
+
+    print("\n---------------------------- Alimentamos con la información de las categorias ----------------------------\n")
+    
     encoder.fit(df["overall_sentiment"])
 
     df_class = pd.DataFrame(data = {
@@ -20,17 +22,22 @@ def load_model():
         "ref": encoder.transform(df["overall_sentiment"])
         })
     
-    # Dividimos el conjunto de datos en 2: entrenamiento (90%) y pruebas (10%)
+    print("\n---------------------------- Dividimos el conjunto de datos en 2: entrenamiento (90%) y pruebas (10%) ----------------------------\n")
+    
     df_train, df_test = train_test_split(df_class, test_size=0.1, random_state=2023)
     
-    # Cargar el tokenizador y el modelo preentrenado
+    print("\n---------------------------- Cargar el tokenizador y el modelo preentrenado ----------------------------\n")
+    
     model_name = "mrm8488/distilroberta-finetuned-financial-news-sentiment-analysis"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
     
-    # Preparación del conjunto de datos de lenguaje
+    print("\n---------------------------- Preparación del conjunto de datos de lenguaje ----------------------------\n")
+    
     data_lm = TextDataLoaders.from_df(df_train, valid_pct=0.2, text_col="text", label_col="ref", is_lm=True, tokenizer=tokenizer)
-    # Entrenamiento del modelo de lenguaje
+    
+    print("\n---------------------------- Entrenamiento del modelo de lenguaje ----------------------------\n")
+    
     learn_lm = language_model_learner(data_lm, AWD_LSTM, drop_mult=0.7, metrics=accuracy)
     suggested_lr = learn_lm.lr_find()
     learn_lm.fit_one_cycle(1, lr_max=suggested_lr.valley)
@@ -46,7 +53,8 @@ def load_model():
     learn_cls.unfreeze()
     learn_cls.fit_one_cycle(5, lr_max=slice(suggested_lr.valley/(2.6**4), suggested_lr.valley))
 
-    # Guardamos el modelo en la variable global
+    print("\n---------------------------- Guardamos el modelo en la variable global ----------------------------\n")
+
     global_learn_cls = learn_cls
 
 
